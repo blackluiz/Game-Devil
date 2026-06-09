@@ -1,4 +1,4 @@
-# Game Devil Flutter - versão refatorada
+# Game Devil 
 
 Protótipo 2D feito em Flutter + Flame.
 
@@ -15,11 +15,6 @@ Protótipo 2D feito em Flutter + Flame.
 
 ## Rodar
 
-```bash
 flutter pub get
 flutter run -d chrome
-```
-
-## GitHub
-
-Antes de enviar para o GitHub, garanta que o `.gitignore` está no projeto. Não envie `build/`, `.dart_tool/`, `ios/Flutter/ephemeral/`, `macos/Flutter/ephemeral/` nem `windows/flutter/ephemeral/`.
+Protótipo de um jogo feito por apenas uma pessoa, com o intuito de ser apenas um jogo troll para fazer as pessoas pensarem
