@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../game/game_devil_game.dart';
 
+// Tela mostrada quando o jogador termina a última fase.
 class FinishedScreen extends StatelessWidget {
   const FinishedScreen({super.key, required this.game});
 
@@ -27,7 +28,7 @@ class FinishedScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 12),
                   const Text(
-                    'Você terminou as 10 fases.Isso é apenas um prototipo nao espere muito',
+                    'Você terminou as 10 fases.Isso era apenas um prototipo nao espere muito',
                     textAlign: TextAlign.center,
                     style: TextStyle(color: Colors.white70),
                   ),

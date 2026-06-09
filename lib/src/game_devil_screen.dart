@@ -5,6 +5,9 @@ import 'package:flutter/services.dart';
 import 'game/game_devil_game.dart';
 import 'ui/game_ui.dart';
 
+// Esta tela junta duas partes importantes:
+// 1) O GameWidget, que desenha o jogo feito com Flame.
+// 2) A interface Flutter por cima, com menu, dicas, HUD e botões de toque.
 class GameDevilScreen extends StatefulWidget {
   const GameDevilScreen({super.key});
 
@@ -18,6 +21,9 @@ class _GameDevilScreenState extends State<GameDevilScreen> {
   @override
   void initState() {
     super.initState();
+    
+     // Cria uma única instância do jogo.
+    // Essa instância guarda a fase atual, posição do personagem, porta aberta etc.
     game = GameDevilGame();
   }
 

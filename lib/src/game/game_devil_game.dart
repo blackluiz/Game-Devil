@@ -9,17 +9,25 @@ import 'game_world.dart';
 import 'level_data.dart';
 import 'player.dart';
 
+// Classe principal do jogo feito com Flame
+// Aqui ficam a lógica das fases, física do personagem, colisões e desenho do cenário
 class GameDevilGame extends FlameGame {
+  // Usado para avisar a interface Flutter que algo mudou,como a porta abriu ou o jogador avançou de fase
   final ValueNotifier<int> uiTick = ValueNotifier<int>(0);
+  // Personagem
   final Player player = Player();
 
+ // Estado atual do jogo: menu, jogando ou tela final
   GameMode mode = GameMode.menu;
   int currentLevel = 0;
+   // Maior fase ja completada
   int unlockedLevel = 0;
 
   bool leftHeld = false;
   bool rightHeld = false;
+  // Estado da porta da fase atual
   bool doorOpen = false;
+  // Para a última fase para saber se o jogador já saiu do começo
   bool hasLeftStart = false;
 
   int sequenceProgress = 0;
@@ -30,6 +38,7 @@ class GameDevilGame extends FlameGame {
   double animTime = 0;
   double uiClock = 0;
 
+// Guarda quais botões do chão foram pressionados
   Set<int> padsDown = <int>{};
 
   bool get playing => mode == GameMode.playing;
@@ -44,6 +53,7 @@ class GameDevilGame extends FlameGame {
   String get levelTitle => 'Level ${currentLevel + 1}/${levels.length}';
   String get currentHint => levels[currentLevel].hint;
 
+  // Texto pequeno do HUD que mostra progresso da fase atual
   String get statusLine {
     if (!playing) return '';
     if (doorOpen) return 'Porta aberta!';
@@ -60,6 +70,8 @@ class GameDevilGame extends FlameGame {
     uiTick.value = uiTick.value + 1;
   }
 
+// Começa uma fase específica ele reseta o estado do jogo para o começo da fase, como posição do jogador,
+// estado da porta, botões pressionados, etc.
   void startLevel(int index) {
     currentLevel = index.clamp(0, levels.length - 1);
     mode = GameMode.playing;
@@ -79,11 +91,13 @@ class GameDevilGame extends FlameGame {
     notifyUi();
   }
 
+// Reinicia a fase atual.
   void restartLevel() {
     if (!playing) return;
     startLevel(currentLevel);
   }
 
+  // Volta para o menu de fases.
   void backToMenu() {
     mode = GameMode.menu;
     leftHeld = false;
@@ -126,6 +140,7 @@ class GameDevilGame extends FlameGame {
     _checkButtons();
     _handleDoor();
 
+  // Se o personagem cair para fora da tela, reinicia a fase. 
     if (player.y > GameWorld.height + 80) {
       restartLevel();
       return;
@@ -144,14 +159,18 @@ class GameDevilGame extends FlameGame {
 
     player.vx = input * 205;
     player.x += player.vx * dt;
+
+    // Impede o personagem de sair pelas laterais do cenário.
     player.x = player.x.clamp(48, GameWorld.width - 70 - player.width);
 
+  // Gravidade
     player.vy += 980 * dt;
     player.y += player.vy * dt;
 
     final centerX = player.x + player.width / 2;
     final hasGround = !(currentLevel == 6 && centerX > pitRect.left && centerX < pitRect.right);
 
+// Colisão com o chão.
     if (hasGround && player.y + player.height >= GameWorld.floorY) {
       player.y = GameWorld.floorY - player.height;
       player.vy = 0;
@@ -203,7 +222,8 @@ class GameDevilGame extends FlameGame {
         nowDown.add(i);
       }
     }
-
+ // Chama _onPadPressed somente no momento em que o botão começa a ser pressionado.
+ //evitando múltiplas ativações enquanto o personagem estiver em cima do botão.
     for (final index in nowDown) {
       if (!padsDown.contains(index)) {
         _onPadPressed(index);
@@ -213,6 +233,7 @@ class GameDevilGame extends FlameGame {
     padsDown = nowDown;
   }
 
+ // Executa a lógica quando um botão/pad do chão é apertado.  
   void _onPadPressed(int index) {
     if (doorOpen) return;
 
@@ -231,6 +252,7 @@ class GameDevilGame extends FlameGame {
     }
 
     if (currentLevel == 7) {
+        // Fase 8: ordem correta é 3, 1, 4, 2.
       const order = [2, 0, 3, 1];
       if (index == order[sequenceProgress]) {
         sequenceProgress += 1;
@@ -247,6 +269,7 @@ class GameDevilGame extends FlameGame {
     notifyUi();
   }
 
+  // Verifica colisão com a porta.
   void _handleDoor() {
     if (playerRect.overlaps(doorRect) && doorOpen) {
       if (currentLevel >= levels.length - 1) {
@@ -256,6 +279,7 @@ class GameDevilGame extends FlameGame {
         rightHeld = false;
         notifyUi();
       } else {
+         // Se ainda existem fases, libera a próxima e começa ela automaticamente.
         unlockedLevel = math.max(unlockedLevel, currentLevel + 1);
         startLevel(currentLevel + 1);
       }
@@ -279,11 +303,13 @@ class GameDevilGame extends FlameGame {
     final dx = (size.x - GameWorld.width * scale) / 2;
     final dy = (size.y - GameWorld.height * scale) / 2;
 
+    // Fundo fora da área do jogo.
     canvas.drawRect(
       Rect.fromLTWH(0, 0, size.x, size.y),
       Paint()..color = const Color(0xFF050B18),
     );
 
+    // Desenha o mundo centralizado e escalado.
     canvas.save();
     canvas.translate(dx, dy);
     canvas.scale(scale);
@@ -291,6 +317,7 @@ class GameDevilGame extends FlameGame {
     canvas.restore();
   }
 
+  // Desenha cenário, chão, grade, elementos de fase, porta e personagem.
   void _drawWorld(Canvas c) {
     final bg = Paint()..color = const Color(0xFF0B2C55);
     final wall = Paint()..color = const Color(0xFF0E477E);
@@ -316,6 +343,7 @@ class GameDevilGame extends FlameGame {
     player.draw(c, animTime: animTime, leftHeld: leftHeld, rightHeld: rightHeld);
   }
 
+  // Desenha elementos que mudam dependendo da fase.
   void _drawLevelChanges(Canvas c) {
     if (currentLevel == 6) {
       c.drawRect(pitRect, Paint()..color = const Color(0xFF050B18));
@@ -340,6 +368,7 @@ class GameDevilGame extends FlameGame {
     }
   }
 
+  // Desenha a porta.
   void _drawDoor(Canvas c) {
     final border = Paint()..color = doorOpen ? const Color(0xFF57C9FF) : const Color(0xFF041A3A);
     final inner = Paint()..color = doorOpen ? const Color(0xFF8BE2FF).withOpacity(0.7) : const Color(0xFF6DCBFF).withOpacity(0.32);
@@ -357,6 +386,7 @@ class GameDevilGame extends FlameGame {
     }
   }
 
+  // Desenha cada botão vermelho no chão.
   void _drawButtonPad(Canvas c, Rect rect, int label, bool active) {
     final border = Paint()..color = const Color(0xFF35110A);
     final top = Paint()..color = active ? const Color(0xFFFFD36D) : const Color(0xFFFF6B34);
@@ -366,6 +396,7 @@ class GameDevilGame extends FlameGame {
     c.drawRect(rect.translate(0, 6), side);
     c.drawRect(rect, top);
 
+    // Número acima do botão para facilitar saber a sequência.
     final painter = TextPainter(
       text: TextSpan(
         text: '$label',

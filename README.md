@@ -14,7 +14,8 @@ Protótipo 2D feito em Flutter + Flame.
 - `lib/src/ui/`: menus, HUD, controles e tela final.
 
 ## Rodar
-
+´´´
 flutter pub get
 flutter run -d chrome
 Protótipo de um jogo feito por apenas uma pessoa, com o intuito de ser apenas um jogo troll para fazer as pessoas pensarem
+´´´

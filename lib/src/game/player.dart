@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 
 import 'game_world.dart';
 
+// Classe responsável pelo personagem principal.
+// Ela guarda posição, velocidade, tamanho e também desenha o boneco preto.
 class Player {
   Player() {
     reset();
@@ -22,6 +24,7 @@ class Player {
 
   Rect get rect => Rect.fromLTWH(x, y, width, height);
 
+  // Volta o personagem para o começo da fase.
   void reset() {
     x = 90;
     y = GameWorld.floorY - height;
@@ -30,6 +33,7 @@ class Player {
     grounded = true;
   }
 
+  //Personagem em pixel arts.
   void draw(Canvas c, {required double animTime, required bool leftHeld, required bool rightHeld}) {
     final p = Paint()..color = Colors.black;
     final head = Rect.fromLTWH(x + 3, y, 14, 14);

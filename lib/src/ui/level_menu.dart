@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../game/game_devil_game.dart';
 import '../game/level_data.dart';
 
+// Tela inicial com o título do jogo e seletor de fases.
 class LevelMenu extends StatelessWidget {
   const LevelMenu({super.key, required this.game});
 
@@ -15,6 +16,7 @@ class LevelMenu extends StatelessWidget {
       child: SafeArea(
         child: Center(
           child: ConstrainedBox(
+            // Limita a largura do menu para não ficar espalhado em telas grandes.
             constraints: const BoxConstraints(maxWidth: 650),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -59,7 +61,7 @@ class LevelMenu extends StatelessWidget {
                 ),
                 const SizedBox(height: 28),
                 const Text(
-                  'Controles: setas na tela, teclado A/D/W, setas, espaço, R para reiniciar e Esc para menu.',
+                  'Controles: setas na tela.',
                   textAlign: TextAlign.center,
                   style: TextStyle(color: Colors.white54),
                 ),

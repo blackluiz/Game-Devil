@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../game/game_devil_game.dart';
 
+// Botões de movimento que aparecem na tela.
 class Controls extends StatelessWidget {
   const Controls({super.key, required this.game});
 

@@ -18,6 +18,7 @@ class Hud extends StatelessWidget {
               children: [
                 SmallHudButton(text: 'MENU', onTap: game.backToMenu),
                 const Spacer(),
+                // Caixa central com fase atual e progresso do puzzle.
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                   decoration: BoxDecoration(
@@ -37,6 +38,7 @@ class Hud extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 12),
+             // Caixa da dica da fase.
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 9),
               decoration: BoxDecoration(
@@ -55,7 +57,7 @@ class Hud extends StatelessWidget {
     );
   }
 }
-
+// Botão pequeno usado no HUD para menu e reset.
 class SmallHudButton extends StatelessWidget {
   const SmallHudButton({super.key, required this.text, required this.onTap});
 
